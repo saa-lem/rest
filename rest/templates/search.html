@@ -1,0 +1,54 @@
+{% block content %}
+<body>
+<form action="" method="GET">
+<input type="text" name="q" />
+<button type="submit">search</button>
+</form>
+
+<div class="container">
+    {% if q%}
+    <h4>Found {{ q|length }} lands from the search {{ seen }}</h4>
+    {% else %}
+    <h4>Found 0 lands from search {{ seen }}</h4>
+    {% endif %}
+    <div class="row">
+        {% if q %}
+        {% for seen in q %}
+        <div class="col-md-4">
+            <div class="card card-default">
+                <div class="card-header">
+                    <h5>{{seen.name}}</h5>
+                
+                </div>
+                <div class="card-title">
+                    <img src="{{seen.image.url}}" width="100%" class="img-responsive" alt="searched image">
+                </div>
+                <div class="card-footer">
+                  <h5>Price: {{seen.price}}<br>Location:{{seen.location}}
+                  </h5>
+                  <h5>{{seen.description}}</h5>
+              </div>
+            </div>
+        </div>
+        {% empty %}
+        <h4>There are no lands.</h4>
+        {% endfor %}
+        {% endif %}
+    </div>
+</div> 
+
+</body>
+{% endblock %
+
+<!-- {% for seen in seens %}
+
+<p> {{seen.name}}</p>
+<p> {{seen.location}}</p>
+{% empty %}
+
+ <p> no search </p>
+{% endfor %}
+
+</body>
+
+{% endblock %} -->
