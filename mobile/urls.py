@@ -21,6 +21,7 @@ from django.urls import path
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     path('', include('rest.urls')),
-    path('', include('django.contrib.auth.urls')),
 ]
+#     path('', include('django.contrib.auth.urls')),
+# ]
 
