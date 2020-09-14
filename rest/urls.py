@@ -12,7 +12,7 @@ urlpatterns = [
   path('property/<int:pk>/update/',PropertyUpdateView.as_view(), name = 'property-update'),
   path('property/<int:pk>/delete/',PropertyDeleteView.as_view(), name = 'property-delete'),
   path('profile/details/<str:username>/',views.display_profile, name = 'profile-detail'),
-  path('user/<str:username>/',UserPropertyListView.as_view(), name = 'user-projects'),
+  path('api/search/',UserPropertyListView.as_view(), name = 'user-projects'),
   path('search/',views.hup_find, name = 'search'),
   path('api/properties/', views.PropertyList.as_view()),
   path('api/profiles/', views.ProfileList.as_view()),

@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView
 from rest_framework.generics import GenericAPIView,RetrieveAPIView 
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
+from rest_framework import filters
 from django.http import HttpResponse
 from django.urls import reverse
 from rest_framework.response import Response
@@ -150,17 +151,12 @@ class PropertyDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 
         return False
 
-class UserPropertyListView(ListView):
-    model = Property
-    template_name='profile_detail.html'
-    context_object_name ='properties'
-    ordering = ['-created_on']
-
-
-    def get_queryset(self):
-        user = get_object_or_404(User, username = self.kwargs.get('username'))
-        
-        return Property.objects.filter(profile=user.profile).order_by('-created_on')
+class UserPropertyListView(generics.ListAPIView):
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name', 'location']
+   
 
 
 
