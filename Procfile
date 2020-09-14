@@ -1,1 +1,1 @@
-web: gunicorn mobile.wsgi --log-file - onbytes.wsgi:application
+web: gunicorn mobile.wsgi --log-file - 
