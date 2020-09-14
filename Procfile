@@ -1,1 +1,1 @@
-web: gunicorn mobile.wsgi --log-file 
+web: gunicorn mobile.wsgi --log-file -
