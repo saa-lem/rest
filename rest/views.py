@@ -41,7 +41,6 @@ class PropertyListView(ListView):
     model = Property
     template_name='templates/index.html'
     context_object_name ='properties'
-    ordering = ['-created_on']
 
 
 
