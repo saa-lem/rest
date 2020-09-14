@@ -9,6 +9,7 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView,Re
 from rest_framework.generics import GenericAPIView,RetrieveAPIView 
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
 from rest_framework import filters
+from rest_framework import generics
 from django.http import HttpResponse
 from django.urls import reverse
 from rest_framework.response import Response
