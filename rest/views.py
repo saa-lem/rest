@@ -39,7 +39,7 @@ def display_profile(request,username):
 class PropertyListView(ListView):
     
     model = Property
-    template_name='templates/index.html'
+    template_name='index.html'
     context_object_name ='properties'
 
 
@@ -93,7 +93,7 @@ class PropertyDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
 
 class UserPropertyListView(ListView):
     model = Property
-    template_name='templates/profile_detail.html'
+    template_name='profile_detail.html'
     context_object_name ='properties'
     ordering = ['-created_on']
 
