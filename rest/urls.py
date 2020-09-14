@@ -16,6 +16,7 @@ urlpatterns = [
   path('search/',views.hup_find, name = 'search'),
   path('api/properties/', views.PropertyList.as_view()),
   path('api/profiles/', views.ProfileList.as_view()),
+  path('api/properties/<int:pk>', views.PropertyDetailView.as_view())
 
    
 ] 

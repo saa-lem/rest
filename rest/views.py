@@ -5,7 +5,8 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView,RetrieveAPIView, GenericAPIView
+from rest_framework.mixins import ListModelMixin,CreateModelMixin
 from django.http import HttpResponse
 from django.urls import reverse
 from rest_framework.response import Response
@@ -36,18 +37,75 @@ def display_profile(request,username):
     }
     return render(request,'templates/profile_detail.html',context)
 
-class PropertyListView(ListView):
+# class PropertyListView(ListView):
     
-    model = Property
-    template_name='index.html'
-    context_object_name ='properties'
+#     model = Property
+#     template_name='index.html'
+#     context_object_name ='properties'
+class PropertyList(ListModelMixin,GenericAPIView,CreateModelMixin):
+    '''
+    View that allows you to view and add to the list of all posts
+    '''
+
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get(self, request, *args, **kwargs):
+        '''
+        Function that gives you list of all the posts
+        '''
+        return self.list(request, *args, *kwargs)
+
+    def property(self, request, *args, **kwargs):
+        '''
+        Function that lets you add a new post to the list of all post
+        '''
+        return self.create(request,*args, *kwargs)
 
 
 
 
-class PropertyDetailView(DetailView):
-    model = Property
 
+
+class PropertyDetailView(RetrieveAPIView):
+    '''
+    View that allows you to access one item on the list 
+    '''
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get_property(self,pk):
+        try:
+            return Property.objects.get(pk=pk)
+        except Property.DoesNotExist:
+            return Http404
+
+    def get(self,request, pk, format=None):
+        '''
+        Function that retrieves specified post
+        '''
+        property = self.get_property(pk)
+        serializers = PropertySerializer(post)
+        return Response(serializers.data)
+
+    def put(self,request,pk, format=None):
+        '''
+        Function that updates a specified post
+        '''
+        property = self.get_property(pk)
+        serializers = PropertySerializer(property, request.data)
+        if serializers.is_valid():
+            serializers.save()
+            return Response(serializers.data)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self,request,pk,format=None):
+        '''
+        Function that deletes a specified post
+        '''
+        property = self.get_property(pk)
+        property.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 
