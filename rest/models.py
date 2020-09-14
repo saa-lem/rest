@@ -31,4 +31,8 @@ class Profile(models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-
+ @classmethod
+    def search_by_name(cls, search_term):
+        property = cls.objects.filter(name__icontains=search_term
+        location__icontains=search_term)
+        return property

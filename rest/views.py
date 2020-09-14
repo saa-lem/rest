@@ -28,7 +28,7 @@ def index(request):
 def display_profile(request,username):
     profile = Profile.objects.get(user__username= username)
 
-    user_properties = Property.objects.filter(profile =profile).order_by('created_on')
+    user_properties = Property.objects.get(profile =profile)
 
     context={
         "profile":profile,
@@ -123,8 +123,7 @@ class ProfileList(APIView):
 def hup_find(request):
     if ('properties' in request.GET) and request.GET['properties']:
         search_term=request.GET.get('properties')
-        searched_properties=Property.objects.filter(name__icontains=search_term,
-          location__icontains=search_term)
+        searched_properties=Property.search_by_name(search_term)
         message = f'{search_term}'
         context = {
             "message": message,
