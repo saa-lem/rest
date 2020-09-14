@@ -1,12 +1,12 @@
 
 from django.urls import path
-from .views import PropertyListView,PropertyDetailView,PropertyUpdateView,PropertyDeleteView,UserPropertyListView
+from .views import PropertyListView,PropertyDetailView,PropertyUpdateView,PropertyDeleteView,UserPropertyListView,PropertyList
 from django.conf import settings
 from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
-  path('',PropertyListView.as_view(), name = 'home'),
+  # path('',PropertyListView.as_view(), name = 'home'),
   #  path('property/new/',ProjectCreateView.as_view(), name = 'project-create'),
   path('property/<int:pk>/',PropertyDetailView.as_view(), name = 'property-detail'),
   path('property/<int:pk>/update/',PropertyUpdateView.as_view(), name = 'property-update'),
