@@ -1,0 +1,5 @@
+virtual
+.pyc
+.vscode
+.env
+__pycache__
