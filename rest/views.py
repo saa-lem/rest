@@ -5,7 +5,8 @@ from django.shortcuts import render,redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView,RetrieveAPIView, GenericAPIView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView
+from rest_framework.generics import GenericAPIView,RetrieveAPIView 
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
 from django.http import HttpResponse
 from django.urls import reverse
