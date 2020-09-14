@@ -86,7 +86,7 @@ class PropertyDetailView(RetrieveAPIView):
         Function that retrieves specified post
         '''
         property = self.get_property(pk)
-        serializers = PropertySerializer(post)
+        serializers = PropertySerializer(property)
         return Response(serializers.data)
 
     def put(self,request,pk, format=None):
