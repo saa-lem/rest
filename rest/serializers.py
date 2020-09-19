@@ -10,6 +10,8 @@ class PropertySerializer(serializers.ModelSerializer):
 
         fields = '__all__'
 
+    def create(self,validated_data):
+        return Property.objects.create(**validated_data)
 
 
 class ProfileSerializer(serializers.ModelSerializer):
