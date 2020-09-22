@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.db.models import Q
-from geoposition.fields import GeopositionField
+
 # Create your models here.
 from django.contrib.auth.models import User
 # from django.contrib.gis.db import models
@@ -11,7 +11,6 @@ from django.contrib.auth.models import User
 
 class Property(models.Model):
     name = models.CharField(max_length=20)
-    position = GeopositionField()
     image = models.ImageField(upload_to='property_photo', blank=True, default='property_photo/property.jpg')
     price= models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()

@@ -8,6 +8,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, UpdateView, DeleteView,RedirectView
 from rest_framework.generics import GenericAPIView,RetrieveAPIView 
 from rest_framework.mixins import ListModelMixin,CreateModelMixin
+from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework import filters
 from rest_framework import generics
 from django.http import HttpResponse
@@ -20,138 +22,37 @@ from .forms import ProfileUpdateForm, UserUpdateForm, PostPropertyForm
 from .models import Profile
 from itertools import chain
 # Create your views here.
-def index(request):
-    message = "Welcome to our Site"
-
-    context = {
-        "message":message,
-    }
-
-    return render(request,'templates/index.html',context)
-
-def display_profile(request,username):
-    profile = Profile.objects.get(user__username= username)
-
-    user_properties = Property.objects.get(profile =profile)
-
-    context={
-        "profile":profile,
-        "user_properties":user_properties
-    }
-    return render(request,'templates/profile_detail.html',context)
-
-# class PropertyListView(ListView):
-    
-#     model = Property
-#     template_name='index.html'
-#     context_object_name ='properties'
-class PropertyList(ListModelMixin,GenericAPIView,CreateModelMixin):
-    '''
-    View that allows you to view and add to the list of all posts
-    '''
-
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-
-    def get(self, request, *args, **kwargs):
-        '''
-        Function that gives you list of all the posts
-        '''
-        return self.list(request, *args, *kwargs)
-
+class PropertyView(APIView):
+    def get(self, request):
+        properties = Property.objects.all()
+        # the many param informs the serializer that it will be serializing more than a single article.
+        serializer = PropertySerializer(properties, many=True)
+        return Response({"properties": serializer.data})
    
 
-    def post(self, request, *args, **kwargs):
-        '''
-        Function that lets you add a new post to the list of all post
-        '''
-        return self.create(request,*args, *kwargs)
+    def post(self, request):
+        property = request.data.get('property')
 
+        # Create an article from the above data
+        serializer = PropertySerializer(data=property)
+        if serializer.is_valid(raise_exception=True):
+            property_saved = serializer.save()
+        return Response({"success": "Property '{}' added successfully".format(property_saved.name)})
+        
+    def put(self, request, pk):
+        saved_property = get_object_or_404(Property.objects.all(), pk=pk)
+        data = request.data.get('property')
+        serializer = PropertySerializer(instance=saved_property, data=data, partial=True
+        if serializer.is_valid(raise_exception=True):
+        property_saved = serializer.save()
+        return Response({"success": "Property '{}' updated successfully".format(property_saved.name)}) 
 
+def delete(self, request, pk):
+    # Get object with this pk
+    property = get_object_or_404(   Property.objects.all(), pk=pk)
+    property.delete()
+    return Response({"message": "Property with id `{}` has been deleted.".format(pk)},status=204)
 
-
-
-class PropertyDetailView(RetrieveAPIView):
-    '''
-    View that allows you to access one item on the list 
-    '''
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-
-    def get_property(self,pk):
-        try:
-            return Property.objects.get(pk=pk)
-        except Property.DoesNotExist:
-            return Http404
-
-    def get(self,request, pk, format=None):
-        '''
-        Function that retrieves specified post
-        '''
-        property = self.get_property(pk)
-        serializers = PropertySerializer(property)
-        return Response(serializers.data)
-
-    def put(self,request,pk, format=None):
-        '''
-        Function that updates a specified post
-        '''
-        property = self.get_property(pk)
-        serializers = PropertySerializer(property, request.data)
-        if serializers.is_valid():
-            serializers.save()
-            return Response(serializers.data)
-        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self,request,pk,format=None):
-        '''
-        Function that deletes a specified post
-        '''
-        property = self.get_property(pk)
-        property.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-class PropertyUpdateView(LoginRequiredMixin,UserPassesTestMixin,UpdateView):
-     
-    model = Property
-
-    fields = ['name','image','description','price','location','size']
-
-
-    def form_valid(self,form):
-        form.instance.profile = self.request.user.profile
-        return super().form_valid(form)
-
-
-    def test_func(self):
-        property = self.get_object()
-
-        if self.request.user.profile == property.profile:
-            return True
-
-        return False
-
-    def get_redirect_url(self,pk, *args, **kwargs):
-        obj = get_object_or_404(Property, pk = pk)
-        url= obj.get_absolute_url()
-      
-      
-        return url
-
-
-class PropertyDeleteView(LoginRequiredMixin,UserPassesTestMixin,DeleteView):
-    model = Property
-    success_url = ('/')
-    def test_func(self):
-        property = self.get_object()
-
-        if self.request.user.profile == property.profile:
-            return True
-
-        return False
 
 class UserPropertyListView(generics.ListAPIView):
     queryset = Property.objects.all()
@@ -163,11 +64,7 @@ class UserPropertyListView(generics.ListAPIView):
 
 
 
-class PropertyList(APIView):
-    def get(self, request, format = None):
-        all_properties = Property.objects.all()
-        serializers = PropertySerializer(all_properties, many = True)
-        return Response(serializers.data)
+
 
 
 
