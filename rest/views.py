@@ -59,12 +59,13 @@ class PropertyList(ListModelMixin,GenericAPIView,CreateModelMixin):
         '''
         return self.list(request, *args, *kwargs)
 
-    def property(self, request, *args, **kwargs):
+   
+
+    def post(self, request, *args, **kwargs):
         '''
         Function that lets you add a new post to the list of all post
         '''
         return self.create(request,*args, *kwargs)
-
 
 
 
