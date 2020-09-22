@@ -149,6 +149,14 @@ USE_TZ = True
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
+GEOPOSITION_MAP_OPTIONS = {
+    'minZoom': 3,
+    'maxZoom': 15,
+}
+
+GEOPOSITION_MARKER_OPTIONS = {
+    'cursor': 'move'
+}
 
 # Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
